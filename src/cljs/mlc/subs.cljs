@@ -21,3 +21,10 @@
       (contains?
         (reduce union (map :language-groups (:points db)))
         group-name))))
+
+(re-frame/reg-sub
+  :point-from-latlng
+  (fn [db [_ lat lng]]
+    (first (filter #(and (= (:lat %) lat) 
+                         (= (:lng %) lng)) 
+                   (:points db)))))

@@ -55,15 +55,20 @@
   (let [leaflet (atom nil)
         starting-point [43.0755408 -89.4089052]
         zoom 13
-        southWestBound (.latLng js/L 42.9720177 -89.5872175)
-        northEastBound (.latLng js/L 43.2317151 -89.150511)
-        bounds (.latLngBounds js/L southWestBound northEastBound)
+        southwest-bound (.latLng js/L 42.9720177 -89.5872175)
+        northeast-bound (.latLng js/L 43.2317151 -89.150511)
+        bounds (.latLngBounds js/L southwest-bound northeast-bound)
         tiles (.tileLayer js/L 
                           "http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                           (clj->js {:attributionControl false 
                                     :maxZoom 16 
                                     :minZoom 12}))
-        ;; to update, just             
+        marker-clicked (fn [a _ _]
+                         (let [target (-> a .-target)
+                               lat (-> target .getLatLng .-lat)
+                               lng (-> target .getLatLng .-lng)
+                               point (rf/subscribe [:point-from-latlng lat lng])]
+                           (rf/dispatch [:marker-clicked @point])))
         do-update (fn [comp]
                  (let [map (:map @leaflet)
                        markers (:markers @leaflet)
@@ -76,10 +81,10 @@
                                        (if (empty? points)
                                          (persistent! v)
                                          (let [pt (first points)]
-                                           (do (conj! v (.addTo 
-                                                          (.marker js/L 
-                                                                   (clj->js [(:lat pt) (:lng pt)]))
-                                                          map));(.on "click" handle-click)
+                                           (do (conj! v (-> (.marker js/L 
+                                                                     (clj->js [(:lat pt) (:lng pt)]))
+                                                            (.addTo map)
+                                                            (.on "click" marker-clicked)))
                                                (recur (rest points) v)))))]
                      (swap! leaflet assoc :markers new-markers))))
         init (fn [comp]
