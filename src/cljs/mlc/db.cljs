@@ -12,4 +12,5 @@
 
 (def default-db
   {:points mock-records
-   :active-groups language-group-names})
+   :active-groups language-group-names
+   :current-point (first mock-records)})

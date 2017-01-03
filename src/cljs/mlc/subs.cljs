@@ -28,3 +28,8 @@
     (first (filter #(and (= (:lat %) lat) 
                          (= (:lng %) lng)) 
                    (:points db)))))
+
+(re-frame/reg-sub
+  :current-point
+  (fn [db _]
+    (:current-point db)))

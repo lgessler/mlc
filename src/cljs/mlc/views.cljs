@@ -8,18 +8,36 @@
 ;; Sidebar
 ;;------------------------------------
 (defn sidebar-row
-  [name]
+  [iname ival]
   [:div.item 
-   [:p.description name]
-   [:p.item-value "yo"]])
+   [:p.description iname]
+   [:p.item-value ival]])
+
+(defn street-view-url 
+  [address]
+  (str "https://maps.googleapis.com/maps/api/streetview?size=400x200&location=" 
+      address 
+      "&key="
+      "AIzaSyDmt7eu9luPMK3H8jYJbK9Tjz081l3BT-A"))
 
 (defn sidebar [] 
-  (let [sidebar-items ["Name" "Languages" "Number of Speakers" "Type" "Address"]]
-    [:div#sidebar.col-sm-4.col-md-3 
-     [:img#street-view]
-     [:div#sidebar-strip] ;; color
-     (for [iname sidebar-items]
-       ^{:key iname} [sidebar-row iname])]))
+  (reagent/create-class
+    {:reagent-render (fn [props]
+                       (let [sidebar-items {:name "Name" 
+                                            :languages "Languages" 
+                                            :number-of-speakers "Number of Speakers" 
+                                            :type "Type" 
+                                            :address "Address"}
+                             current-point (:current-point props)]
+                         [:div#sidebar.col-sm-4.col-md-3 
+                          [:img#street-view {:src (street-view-url (:address current-point))}]
+                          [:div#sidebar-strip] 
+                          (for [[kw iname] (seq sidebar-items)]
+                            (let [ival (kw current-point)
+                                  ival (if (= kw :languages)
+                                         (clojure.string/join ", " ival)
+                                         ival)]
+                              ^{:key iname} [sidebar-row iname ival]))]))}))
 
 ;;------------------------------------
 ;; Filter Menu
@@ -138,6 +156,7 @@
   (fn []
     [:div
      [:div.row.row-eq-height
-      [sidebar]
+      (let [current-point (rf/subscribe [:current-point])]
+        [sidebar {:current-point @current-point}])
       [map-container]]
      [filter-menu]]))

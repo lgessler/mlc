@@ -21,4 +21,6 @@
   :marker-clicked
   (fn [db [_ point]]
     (js/console.log point)
-    db))
+    (assoc db :current-point point)))
+    
+      
