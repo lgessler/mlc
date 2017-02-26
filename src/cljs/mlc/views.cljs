@@ -79,7 +79,6 @@
                                                      (.addTo map)
                                                      (.on "click" marker-clicked)))
                                         (recur (rest points) v)))))]
-              (js/console.log (first new-markers))
               (rf/dispatch [:new-markers new-markers])
               (swap! leaflet assoc :markers new-markers))))
         init 

@@ -8,6 +8,8 @@
 ;; -- Constants ---------------------------------------------------------------
 (def sheet-url (str "https://docs.google.com/spreadsheets/d/"
                     "112wUDcvKnJLnVkAwm0rM7CJy9MWVKmE-t5EbziHr4vc/pubhtml"))
+(def selected-icon-path "img/marker-icon-red.png")
+(def unselected-icon-path "img/marker-icon-blue.png")
 
 ;; -- Interceptors ------------------------------------------------------------
 (defn check-and-throw
@@ -64,7 +66,8 @@
     (let [db (:db fx)]
       {:db (assoc db :current-point point)
        :leaflet {:old-point (:current-point db)
-                 :new-point point}})))
+                 :new-point point
+                 :markers (:markers db)}})))
 
 (rf/reg-event-db
   :update-query
@@ -92,28 +95,24 @@
                                         (rf/dispatch [:load-sheets-data data]))})))
 
 (defn- same-latlng
-  [marker point]
+  [point marker]
   (and (= (:lat point) (-> marker .-_latlng .-lat))
        (= (:lng point) (-> marker .-_latlng .-lng))))
+
+(defn- update-icon!
+  [marker icon-path]
+  (aset (.-_icon marker) "src" icon-path))
 
 ;; to do: 
 ;; 1. find markers that correspond to points
 ;; 2. adjust colors
 (rf/reg-fx
   :leaflet
-  (fn [{:keys [new-point old-point]}]
-    (js/console.log new-marker old-marker)
-    (when (object? old-marker)
-      (js/alert "hi"))
-    new-marker))
+  (fn [{:keys [new-point old-point markers]}]
+    (let [new-marker (first (filter (partial same-latlng new-point) markers))
+          old-marker (first (filter (partial same-latlng old-point) markers))]
 
-; after finding pairs this way, update them
-
-;;(let [new-points (for [p (:points db) m new-markers 
-;;                           :when (and (= (:lat p) (-> m .-_latlng .-lat))
-;;                                      (= (:lng p) (-> m .-_latlng .-lng)))]
-;;                       (assoc p :marker m))]
-;;      (js/console.log new-points)
-;;      db)
-;;
+      (when-not (nil? old-point)
+        (update-icon! old-marker unselected-icon-path))
+      (update-icon! new-marker selected-icon-path))))
 
