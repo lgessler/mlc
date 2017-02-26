@@ -45,11 +45,12 @@
      :source-paths ["src/cljs"]
      :compiler     {:main            mlc.core
                     :output-to       "resources/public/js/compiled/app.js"
+                    :externs         ["externs/tabletop.js" 
+                                      "externs/leaflet.js"
+                                      "externs/jquery.js"]
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
                     :pretty-print    false}}
-
-
     ]}
 
   )

@@ -87,21 +87,21 @@
 (rf/reg-fx
   :tabletop
   (fn [sheet-url]
-    (.init js/Tabletop #js {:key sheet-url
-                            :simpleSheet true
-                            ;; tabletop doesn't really have affordances for
-                            ;; error handling, so assume all went well...
-                            :callback (fn [data tabletop] 
-                                        (rf/dispatch [:load-sheets-data data]))})))
+    (js/Tabletop.init #js {:key sheet-url
+                           :simpleSheet true
+                           ;; tabletop doesn't really have affordances for
+                           ;; error handling, so assume all went well...
+                           :callback (fn [data tabletop] 
+                                       (rf/dispatch [:load-sheets-data data]))})))
 
 (defn- same-latlng
   [point marker]
-  (and (= (:lat point) (-> marker .-_latlng .-lat))
-       (= (:lng point) (-> marker .-_latlng .-lng))))
+  (and (= (:lat point) (.-lat (aget marker "_latlng")))
+       (= (:lng point) (.-lng (aget marker "_latlng")))))
 
 (defn- update-icon!
   [marker icon-path]
-  (aset (.-_icon marker) "src" icon-path))
+  (aset (aget marker "_icon") "src" icon-path))
 
 ;; to do: 
 ;; 1. find markers that correspond to points
