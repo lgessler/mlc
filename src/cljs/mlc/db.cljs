@@ -34,6 +34,7 @@
 (s/def ::db (s/keys :req-un [::current-point ::points ::markers ::active-groups ::query ::loaded]))
 
 ;; -- Default -----------------------------------------------------------------
+; todo: just build this from what you find in the json
 (defonce language-group-names #{"European"
                                 "African"
                                 "Native American"

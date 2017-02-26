@@ -1,6 +1,7 @@
 (ns mlc.subs
   (:require-macros [reagent.ratom :refer [reaction]])
   (:require [clojure.set :refer [intersection union]]
+            [clojure.string :refer [includes? lower-case join]]
             [re-frame.core :as re-frame]))
 
 ;; -- Helpers -----------------------------------------------------------------
@@ -17,7 +18,16 @@
 
 (defn- filter-by-query
   [db]
-  (:points db))
+  (let [q (:query db)
+        points (:points db)
+        match (fn 
+                [s1 s2] 
+                (includes? (lower-case s1) (lower-case s2)))]
+    (for [p points
+          :when (or (match (:name p) q)
+                    (match (join ", " (:languages p)) q)
+                    (match (join ", " (:language-groups p)) q))]
+      p)))
 
 ;; -- Subscriptions -----------------------------------------------------------
 (re-frame/reg-sub
