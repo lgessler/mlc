@@ -4,7 +4,8 @@
             [mlc.events]
             [mlc.subs]
             [mlc.views :as views]
-            [mlc.config :as config]))
+            [mlc.config :as config]
+            [day8.re-frame.http-fx]))
 
 (defn dev-setup []
   (when config/debug?

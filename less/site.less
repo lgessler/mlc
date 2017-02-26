@@ -27,9 +27,17 @@ body > button {
   right: 100px;
 }
 
-#street-view {
+.street-view {
   width: 100%;
   height: auto;
+}
+
+#sidebar-strip {
+  padding:0;
+  margin:0;
+  height:5px;
+  width:auto;
+  background-color:#e2e;
 }
 
 #sidebar {
@@ -91,7 +99,7 @@ body > button {
   border-radius: 4px;
 
   padding: 8px;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.85);
   position: absolute;
   right: 20px;
   top: 54px;
@@ -107,11 +115,21 @@ body > button {
   color: #aaa;
 }
 
-#sidebar-strip {
-  padding:0;
-  margin:0;
-  height:5px;
-  width:auto;
-  background-color:#e2e;
-}
+/* search */
+#search-bar {
+  border-style: solid;
+  border-color: #e2e;
+  border-left: 3px;
+  border-top: 3px;
+  border-bottom: 3px;
+  border-radius: 4px;
 
+  background: rgba(255,255,255,0.85);
+  position: absolute;
+  right: 20px;
+  top: 14px;
+  z-index: 99;
+
+  height: 30px;
+  width: 156px;
+}
