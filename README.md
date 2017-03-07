@@ -1,6 +1,8 @@
 # mlc
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+A tiny single-page application for showing points of linguistic interest on a map. Developed for [the Madison Language Capital project](http://mlc.lgessler.com). Still under development. Contact lukegessler@gmail.com with questions.
+
+# Build Instructions
 
 ## Development Mode
 
